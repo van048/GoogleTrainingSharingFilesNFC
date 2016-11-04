@@ -14,12 +14,15 @@ import android.widget.Toast;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-    NfcAdapter mNfcAdapter;
+    @SuppressWarnings("FieldCanBeLocal")
+    private NfcAdapter mNfcAdapter;
     // Flag to indicate that Android Beam is available
+    @SuppressWarnings("unused")
     boolean mAndroidBeamAvailable = false;
     // List of URIs to provide to Android Beam
-    private Uri[] mFileUris = new Uri[10];
+    private final Uri[] mFileUris = new Uri[10];
     // Instance that returns available files from this app
+    @SuppressWarnings("FieldCanBeLocal")
     private FileUriCallback mFileUriCallback;
 
     @Override
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetWorldReadable")
     private void specifyFilesToSend() {
-        String transferFile = "transferimage.jpg";
+        String transferFile = "transfer_image.jpg";
         File extDir = getExternalFilesDir(null);
         File requestFile = new File(extDir, transferFile);
         boolean setReadableResult = requestFile.setReadable(true, false);
