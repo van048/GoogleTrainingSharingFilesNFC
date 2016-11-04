@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         // Get a URI for the File and add it to the list of URIs
         Uri fileUri = Uri.fromFile(requestFile);
         if (fileUri != null) {
-            mFileUris[0] = fileUri;// TODO: 2016/11/4  
+            mFileUris[0] = fileUri;// TODO: 2016/11/4
         } else {
             Log.e("My Activity", "No File URI available for file.");
         }
