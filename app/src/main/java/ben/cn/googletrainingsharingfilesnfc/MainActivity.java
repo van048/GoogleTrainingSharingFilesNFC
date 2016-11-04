@@ -1,7 +1,9 @@
 package ben.cn.googletrainingsharingfilesnfc;
 
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +12,11 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     NfcAdapter mNfcAdapter;
     // Flag to indicate that Android Beam is available
-    boolean mAndroidBeamAvailable  = false;
+    boolean mAndroidBeamAvailable = false;
+    // List of URIs to provide to Android Beam
+    private Uri[] mFileUris = new Uri[10];
+    // Instance that returns available files from this app
+    private FileUriCallback mFileUriCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,31 @@ public class MainActivity extends AppCompatActivity {
             // Android Beam file transfer is available, continue
         } else {
             mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+            /*
+             * Instantiate a new FileUriCallback to handle requests for
+             * URIs
+             */
+            mFileUriCallback = new FileUriCallback();
+            // Set the dynamic callback for URI requests.
+            mNfcAdapter.setBeamPushUrisCallback(mFileUriCallback, this);
+        }
+    }
 
+    /**
+     * Callback that Android Beam file transfer calls to get
+     * files to share
+     */
+    private class FileUriCallback implements
+            NfcAdapter.CreateBeamUrisCallback {
+        public FileUriCallback() {
+        }
+
+        /**
+         * Create content URIs as needed to share with another device
+         */
+        @Override
+        public Uri[] createBeamUris(NfcEvent event) {
+            return mFileUris;
         }
     }
 }
