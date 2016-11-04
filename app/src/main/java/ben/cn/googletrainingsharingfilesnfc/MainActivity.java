@@ -1,5 +1,6 @@
 package ben.cn.googletrainingsharingfilesnfc;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
@@ -7,7 +8,10 @@ import android.nfc.NfcEvent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     NfcAdapter mNfcAdapter;
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        specifyFilesToSend();
 
         PackageManager packageManager = getPackageManager();
         // NFC isn't available on the device
@@ -69,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Uri[] createBeamUris(NfcEvent event) {
             return mFileUris;
+        }
+    }
+
+    @SuppressLint("SetWorldReadable")
+    private void specifyFilesToSend() {
+        String transferFile = "transferimage.jpg";
+        File extDir = getExternalFilesDir(null);
+        File requestFile = new File(extDir, transferFile);
+        boolean setReadableResult = requestFile.setReadable(true, false);
+        if (!setReadableResult) return;
+        // Get a URI for the File and add it to the list of URIs
+        Uri fileUri = Uri.fromFile(requestFile);
+        if (fileUri != null) {
+            mFileUris[0] = fileUri;
+        } else {
+            Log.e("My Activity", "No File URI available for file.");
         }
     }
 }
